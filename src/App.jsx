@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext, useMemo, useCallback } from 'react';
 import { Search, ChevronDown, ChevronLeft, ChevronRight, UploadCloud, File, X, Loader2, ServerCrash, FileWarning, Shield, ShieldAlert, ShieldCheck, Eye, EyeOff, Menu, Sun, Moon } from 'lucide-react';
+import userAvatar from '../Assets/avatar.jpg';
 
 // --- THEME CONTEXT ---
 const ThemeContext = createContext();
@@ -623,7 +624,7 @@ function Header() {
           </button>
           <div className="relative">
             <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center space-x-2">
-              <img className="w-8 h-8 rounded-full" src={`./Assets/user-avatar.jpg`} alt="User avatar" />
+              <img className="w-8 h-8 rounded-full" src={userAvatar} alt="User avatar" />
               <span className="hidden md:inline text-sm font-semibold dark:text-gray-200">Admin</span>
               <ChevronDown size={16} className={`transition-transform dark:text-gray-400 ${dropdownOpen ? 'rotate-180' : ''}`} />
             </button>
