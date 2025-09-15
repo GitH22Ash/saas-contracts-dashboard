@@ -3,9 +3,9 @@ A responsive single-page application built with React and Tailwind CSS that prov
 
 [Live Demo Link Here] 
 
-![Project Screenshot](.Assets/ss1.png)
-![Project Screenshot](.Assets/ss2.png)
-![Project Screenshot](.Assets/ss3.png)
+![Login Page](Assets/ss1.png)
+![Login Page](Assets/ss2.png)
+![Login Page](Assets/ss3.png)
 
 Features
 Secure Mock Authentication: A clean login interface that accepts test123 as the password for any username.
