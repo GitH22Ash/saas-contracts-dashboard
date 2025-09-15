@@ -1,0 +1,53 @@
+{
+  "id": "c1",
+  "name": "MSA 2025",
+  "parties": "Microsoft & ABC Corp",
+  "start": "2023-01-01",
+  "expiry": "2025-12-31",
+  "status": "Active",
+  "risk": "Medium",
+  "clauses": [
+    {
+      "title": "Termination for Convenience",
+      "summary": "Either party may terminate with 90 days written notice.",
+      "confidence": 0.95
+    },
+    {
+      "title": "Limitation of Liability",
+      "summary": "Liability capped at the total fees paid in the preceding 12 months.",
+      "confidence": 0.87
+    },
+    {
+      "title": "Data Privacy",
+      "summary": "Both parties must comply with GDPR and CCPA regulations.",
+      "confidence": 0.91
+    },
+    {
+      "title": "Confidentiality",
+      "summary": "Confidential information must be protected for 5 years post-termination.",
+      "confidence": 0.82
+    }
+  ],
+  "insights": [
+    {
+      "risk": "Medium",
+      "message": "Renewal is automatic unless cancelled 60 days prior to expiry."
+    },
+    {
+      "risk": "Low",
+      "message": "Standard force majeure clause included, covering pandemics."
+    }
+  ],
+  "evidence": [
+    {
+      "source": "Section 12.2",
+      "snippet": "...the total aggregate liability of either party... shall not exceed the total fees paid or payable... during the twelve (12) month period immediately preceding the event giving rise to the claim.",
+      "relevance": 0.91
+    },
+    {
+      "source": "Section 15.1",
+      "snippet": "This Agreement shall automatically renew for successive one (1) year terms unless either party provides written notice of non-renewal at least sixty (60) days prior to the end of the then-current term.",
+      "relevance": 0.95
+    }
+  ]
+}
