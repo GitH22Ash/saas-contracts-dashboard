@@ -1,37 +1,32 @@
 import React, { useState, useEffect, createContext, useContext, useMemo, useCallback } from 'react';
-import { Search, ChevronDown, ChevronLeft, ChevronRight, UploadCloud, File, X, Loader2, ServerCrash, FileWarning, Shield, ShieldAlert, ShieldCheck, Eye, EyeOff, Menu, Sun, Moon } from 'lucide-react';
+import { Search, ChevronDown, ChevronLeft, ChevronRight, UploadCloud, X, Loader2, ServerCrash, FileWarning, Shield, ShieldAlert, ShieldCheck, Eye, EyeOff, Menu, Moon, Sun } from 'lucide-react';
 import userAvatar from '../Assets/avatar.jpg';
+import ContractIcon from './ContractIcon'; // 1. Import your new custom icon
 
 // --- THEME CONTEXT ---
 const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const storedTheme = localStorage.getItem('theme');
-      if (storedTheme) return storedTheme;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return 'light';
-  });
+    const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-  
-  const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+    useEffect(() => {
+        const root = window.document.documentElement;
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
-  const themeValue = useMemo(() => ({
-    theme,
-    toggleTheme,
-  }), [theme]);
+    const toggleTheme = () => {
+        setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    };
+    
+    const themeValue = useMemo(() => ({ theme, toggleTheme }), [theme]);
 
-  return <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>;
+    return (
+        <ThemeContext.Provider value={themeValue}>
+            {children}
+        </ThemeContext.Provider>
+    );
 };
 
 const useTheme = () => useContext(ThemeContext);
@@ -94,9 +89,9 @@ const useAuth = () => useContext(AuthContext);
 export default function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <SaaSContractsApp />
-      </AuthProvider>
+        <AuthProvider>
+            <SaaSContractsApp />
+        </AuthProvider>
     </ThemeProvider>
   );
 }
@@ -179,7 +174,7 @@ function LoginPage() {
                 type="text"
                 autoComplete="username"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Username (any)"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -192,7 +187,7 @@ function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white bg-white dark:bg-gray-700 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -281,18 +276,18 @@ function ContractsDashboard({ navigateToContract }) {
 
   const getStatusBadge = (status) => {
     const styles = {
-      Active: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-      "Renewal Due": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-      Expired: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+      Active: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+      "Renewal Due": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+      Expired: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
     };
-    return `px-2 py-1 text-xs font-medium rounded-full ${styles[status] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`;
+    return `px-2 py-1 text-xs font-medium rounded-full ${styles[status] || 'bg-gray-100 text-gray-800'}`;
   };
 
   const getRiskBadge = (risk) => {
     const styles = {
-      High: "bg-red-200 text-red-900 dark:bg-red-900 dark:text-red-200",
+      High: "bg-red-200 text-red-900 dark:bg-red-800 dark:text-red-100",
       Medium: "bg-yellow-200 text-yellow-900 dark:bg-yellow-800 dark:text-yellow-100",
-      Low: "bg-green-200 text-green-900 dark:bg-green-900 dark:text-green-200",
+      Low: "bg-green-200 text-green-900 dark:bg-green-800 dark:text-green-100",
     };
     const icon = {
       High: <ShieldAlert className="w-3 h-3 mr-1" />,
@@ -309,7 +304,7 @@ function ContractsDashboard({ navigateToContract }) {
       case 'error':
         return <div className="flex flex-col items-center justify-center h-64 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg p-4"><ServerCrash className="w-12 h-12 mb-4" /><p className="font-semibold">Failed to load contracts.</p><p className="text-sm">Please try again later.</p></div>;
       case 'empty':
-        return <div className="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800/50 rounded-lg p-4"><FileWarning className="w-12 h-12 mb-4" /><p className="font-semibold">No contracts yet.</p><p className="text-sm">Upload your first contract to get started.</p></div>;
+        return <div className="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-lg p-4"><FileWarning className="w-12 h-12 mb-4" /><p className="font-semibold">No contracts yet.</p><p className="text-sm">Upload your first contract to get started.</p></div>;
       case 'success':
         return (
           <>
@@ -366,20 +361,20 @@ function ContractsDashboard({ navigateToContract }) {
       <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="relative md:col-span-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
             <input 
               type="text"
               placeholder="Search by name or parties..."
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-transparent dark:text-white rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             />
           </div>
           <div className="flex items-center gap-4 md:col-span-2">
             <select
               value={filters.status}
               onChange={(e) => { setFilters(f => ({...f, status: e.target.value})); setCurrentPage(1); }}
-              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white rounded-lg py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="All">All Statuses</option>
               <option value="Active">Active</option>
@@ -389,7 +384,7 @@ function ContractsDashboard({ navigateToContract }) {
             <select
               value={filters.risk}
               onChange={(e) => { setFilters(f => ({...f, risk: e.target.value})); setCurrentPage(1); }}
-              className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white rounded-lg py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="All">All Risks</option>
               <option value="Low">Low</option>
@@ -435,9 +430,9 @@ function ContractDetailPage({ contractId, navigateBack }) {
 
     const getRiskPill = (risk) => {
         const styles = {
-            High: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/50 dark:text-red-300 dark:border-red-500/50",
-            Medium: "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-500/50",
-            Low: "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/50 dark:text-green-300 dark:border-green-500/50",
+            High: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/50 dark:text-red-300 dark:border-red-600",
+            Medium: "bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-600",
+            Low: "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/50 dark:text-green-300 dark:border-green-600",
         };
         const icon = {
             High: <ShieldAlert className="w-4 h-4 mr-1.5" />,
@@ -461,7 +456,7 @@ function ContractDetailPage({ contractId, navigateBack }) {
         return (
             <div className="text-center">
                 <p className="text-red-500 dark:text-red-400 font-semibold mb-4">Could not load contract details.</p>
-                <button onClick={navigateBack} className="text-indigo-600 hover:underline dark:text-indigo-400">
+                <button onClick={navigateBack} className="text-indigo-600 dark:text-indigo-400 hover:underline">
                     &larr; Back to Dashboard
                 </button>
             </div>
@@ -496,7 +491,7 @@ function ContractDetailPage({ contractId, navigateBack }) {
                         <p className="font-semibold text-gray-800 dark:text-gray-200">{new Date(contract.expiry).toLocaleDateString()}</p>
                     </div>
                      <div>
-                        <button onClick={() => setEvidencePanelOpen(true)} className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold px-4 py-2 rounded-lg transition">View Evidence</button>
+                        <button onClick={() => setEvidencePanelOpen(true)} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 font-semibold px-4 py-2 rounded-lg transition">View Evidence</button>
                     </div>
                 </div>
             </div>
@@ -504,7 +499,7 @@ function ContractDetailPage({ contractId, navigateBack }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Clauses Section */}
                 <div className="lg:col-span-2">
-                    <h2 className="text-xl font-bold mb-4 dark:text-white">Key Clauses</h2>
+                    <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Key Clauses</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {contract.clauses.map((clause, index) => (
                             <div key={index} className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow">
@@ -522,7 +517,7 @@ function ContractDetailPage({ contractId, navigateBack }) {
 
                 {/* AI Insights Section */}
                 <div>
-                    <h2 className="text-xl font-bold mb-4 dark:text-white">AI Insights</h2>
+                    <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">AI Insights</h2>
                     <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow space-y-4">
                         {contract.insights.map((insight, index) => (
                             <div key={index} className="flex items-start">
@@ -530,7 +525,7 @@ function ContractDetailPage({ contractId, navigateBack }) {
                                     {insight.risk === 'High' ? <ShieldAlert size={20} /> : <ShieldCheck size={20} />}
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-sm dark:text-gray-200">{insight.risk} Risk</p>
+                                    <p className="font-semibold text-sm text-gray-800 dark:text-gray-200">{insight.risk} Risk</p>
                                     <p className="text-gray-600 dark:text-gray-400 text-sm">{insight.message}</p>
                                 </div>
                             </div>
@@ -558,13 +553,12 @@ function Sidebar({ isOpen, setIsOpen, navigateToDashboard }) {
       href="#"
       onClick={(e) => {
         onClick(e);
-        // On mobile, close sidebar after nav
         if (window.innerWidth < 768) {
           setIsOpen(false);
         }
       }}
       className={`flex items-center h-12 rounded-lg transition-colors duration-200 overflow-hidden ${
-        active ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 font-semibold' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+        active ? 'bg-indigo-100 text-indigo-700 font-semibold dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'
       } ${isOpen ? 'px-4' : 'justify-center'}`}
     >
       {icon}
@@ -587,17 +581,18 @@ function Sidebar({ isOpen, setIsOpen, navigateToDashboard }) {
 
       {/* Sidebar Panel */}
       <aside className={`fixed inset-y-0 left-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-30 transition-all duration-300 ease-in-out md:sticky md:translate-x-0 md:h-screen ${isOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64 md:w-20'}`}>
-        {/* Spacer to align with header */}
-        <div className="h-16 border-b dark:border-gray-700 flex items-center px-4">
+        {/* Toggle Button */}
+        <div className="h-16 border-b border-gray-200 dark:border-gray-700 flex items-center px-4">
            <button onClick={() => setIsOpen(prev => !prev)} className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300">
                 <Menu size={24} />
             </button>
         </div>
         <nav className="p-2 mt-2 space-y-2">
-          <NavItem icon={<File size={20} />} text="Contracts" active={true} onClick={(e) => { e.preventDefault(); navigateToDashboard(); }}/>
-          <NavItem icon={<Search size={20} />} text="Insights" />
-          <NavItem icon={<File size={20} />} text="Reports" />
-          <NavItem icon={<UploadCloud size={20} />} text="Settings" />
+          {/* 2. Use your custom icon here */}
+          <NavItem icon={<ContractIcon className="w-5 h-5" />} text="Contracts" active={true} onClick={(e) => { e.preventDefault(); navigateToDashboard(); }}/>
+          
+          <NavItem icon={<Search size={20} />} text="Insights" active={false} onClick={(e) => e.preventDefault()} />
+          <NavItem icon={<UploadCloud size={20} />} text="Settings" active={false} onClick={(e) => e.preventDefault()} />
         </nav>
       </aside>
     </>
@@ -625,11 +620,11 @@ function Header() {
           <div className="relative">
             <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center space-x-2">
               <img className="w-8 h-8 rounded-full" src={userAvatar} alt="User avatar" />
-              <span className="hidden md:inline text-sm font-semibold dark:text-gray-200">Admin</span>
-              <ChevronDown size={16} className={`transition-transform dark:text-gray-400 ${dropdownOpen ? 'rotate-180' : ''}`} />
+              <span className="hidden md:inline text-sm font-semibold text-gray-800 dark:text-gray-200">Admin</span>
+              <ChevronDown size={16} className={`transition-transform text-gray-800 dark:text-gray-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
             </button>
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-20 ring-1 ring-black ring-opacity-5">
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-20">
                 <a href="#" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Profile</a>
                 <a href="#" onClick={logout} className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">Logout</a>
               </div>
@@ -651,13 +646,12 @@ function Pagination({ currentPage, totalPages, onPageChange, totalItems, itemsPe
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mt-6 text-sm">
       <p className="text-gray-600 dark:text-gray-400 mb-2 md:mb-0">
-        Showing <span className="font-semibold dark:text-gray-200">{startItem}</span> to <span className="font-semibold dark:text-gray-200">{endItem}</span> of <span className="font-semibold dark:text-gray-200">{totalItems}</span> results
+        Showing <span className="font-semibold">{startItem}</span> to <span className="font-semibold">{endItem}</span> of <span className="font-semibold">{totalItems}</span> results
       </p>
       <div className="flex items-center space-x-1">
         <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
           <ChevronLeft size={16} />
         </button>
-        {/* We can add page numbers here if needed */}
         <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-md font-semibold">{currentPage} / {totalPages}</span>
         <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
           <ChevronRight size={16} />
@@ -722,14 +716,14 @@ function UploadModal({ isOpen, onClose }) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg">
         <div className="p-6 border-b dark:border-gray-700 flex justify-between items-center">
-          <h2 className="text-xl font-bold dark:text-white">Upload Contracts</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"><X /></button>
+          <h2 className="text-xl font-bold">Upload Contracts</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"><X /></button>
         </div>
         <div className="p-6">
           <div 
             onDrop={handleFileDrop} 
             onDragOver={handleDragOver}
-            className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-10 text-center cursor-pointer hover:border-indigo-500 bg-gray-50 dark:bg-gray-700/50 dark:hover:border-indigo-400"
+            className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-10 text-center cursor-pointer hover:border-indigo-500 bg-gray-50 dark:bg-gray-700/50"
           >
             <UploadCloud className="mx-auto w-12 h-12 text-gray-400" />
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -740,12 +734,12 @@ function UploadModal({ isOpen, onClose }) {
           </div>
           {files.length > 0 && (
             <div className="mt-6 max-h-60 overflow-y-auto">
-              <h3 className="font-semibold text-sm mb-2 dark:text-gray-200">Uploaded Files</h3>
+              <h3 className="font-semibold text-sm mb-2">Uploaded Files</h3>
               <ul className="space-y-3">
                 {files.map((file, index) => (
                   <li key={index} className="flex items-center justify-between text-sm p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
                     <div className="flex items-center gap-3">
-                      <File className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      <ContractIcon className="w-5 h-5 text-gray-500" />
                       <span className="text-gray-800 dark:text-gray-200">{file.name}</span>
                     </div>
                     <FileStatusIcon status={file.status} />
@@ -755,7 +749,7 @@ function UploadModal({ isOpen, onClose }) {
             </div>
           )}
         </div>
-        <div className="p-6 bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 rounded-b-lg text-right">
+        <div className="p-6 bg-gray-50 dark:bg-gray-900/50 border-t dark:border-gray-700 rounded-b-lg text-right">
           <button onClick={onClose} className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700">Done</button>
         </div>
       </div>
@@ -768,16 +762,16 @@ function EvidencePanel({ isOpen, onClose, evidence }) {
     return (
         <div className={`fixed top-0 right-0 h-full bg-white dark:bg-gray-800 shadow-2xl z-40 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'} w-full md:w-1/3 lg:w-1/4`}>
             <div className="p-6 border-b dark:border-gray-700 flex justify-between items-center">
-                <h2 className="text-xl font-bold dark:text-white">Retrieved Evidence</h2>
+                <h2 className="text-xl font-bold">Retrieved Evidence</h2>
                 <button onClick={onClose} className="text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"><X /></button>
             </div>
             <div className="p-6 overflow-y-auto h-[calc(100vh-70px)]">
                 <div className="space-y-6">
                     {evidence.map((item, index) => (
-                        <div key={index} className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <div key={index} className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
                             <div className="flex justify-between items-center mb-2">
                                 <span className="font-bold text-indigo-600 dark:text-indigo-400 text-sm">{item.source}</span>
-                                <span className="text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 px-2 py-0.5 rounded-full">
+                                <span className="text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 px-2 py-0.5 rounded-full">
                                     Relevance: {(item.relevance * 100).toFixed(0)}%
                                 </span>
                             </div>
@@ -791,5 +785,4 @@ function EvidencePanel({ isOpen, onClose, evidence }) {
         </div>
     );
 }
-
 
